@@ -23,19 +23,19 @@ exports.findByEmailAddress = function (req, res) {
   })
 }
 
-// exports.validate = (method) => {
-//   switch (method) {
-//     case 'createUser': {
-//       console.log(JSON.stringify(body))
-//       return [
-//         body('firstName', 'firstName doesn\'t exists').exists(),
-//         body('lastName', 'lastName doesn\'t exists').exists(),
-//         body('email', 'Invalid email').exists().isEmail(),
-//         body('password', 'password doesn\'t exists').exists()
-//       ]
-//     }
-//   }
-// }
+exports.validate = (method) => {
+  switch (method) {
+    case 'createUser': {
+      console.log(JSON.stringify(body))
+      return [
+        body('firstName', 'firstName doesn\'t exists').exists(),
+        body('lastName', 'lastName doesn\'t exists').exists(),
+        body('email', 'Invalid email').exists().isEmail(),
+        body('password', 'password doesn\'t exists').exists()
+      ]
+    }
+  }
+}
 
 exports.createUser = function (req, res) {
   const errors = validationResult(req)
@@ -45,16 +45,16 @@ exports.createUser = function (req, res) {
   }
   const newUser = new User(req.body)
   // handles null error
-  // if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-  //   res
-  //     .status(400)
-  //     .send({
-  //       error: true,
-  //       message:
-  //         'Please provide all required fields to create a new user'
-  //     })
-  //   return
-  // }
+  if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+    res
+      .status(400)
+      .send({
+        error: true,
+        message:
+          'Please provide all required fields to create a new user'
+      })
+    return
+  }
 
   User.create(newUser, function (err, user) {
     if (err) {
@@ -64,7 +64,7 @@ exports.createUser = function (req, res) {
     res.json({
       error: false,
       message:
-        'User with email address' + newUser.email + ' added successfully!',
+        'User with email address ' + newUser.email + ' added successfully!',
       data: user
     })
   })

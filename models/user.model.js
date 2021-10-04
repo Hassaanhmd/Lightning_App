@@ -32,8 +32,8 @@ User.create = function (newUser, result) { // do validations and throw exception
       result('error: Email address already in use ' + newUser.email, null)
       return
     }
-    // const password = newUser.password
-    // newUser.password = bcrypt.hashSync(newUser.password, saltRounds)
+    const password = newUser.password
+    newUser.password = bcrypt.hashSync(newUser.password, saltRounds)
     connection.query('INSERT INTO users_table SET ?', newUser, function (err, res) {
       if (err) {
         console.log('error: ', err)
